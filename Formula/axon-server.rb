@@ -5,29 +5,29 @@ class AxonServer < Formula
   desc "Self-hosted Matrix state layer between homeservers and clients"
   homepage "https://github.com/matrix-axon/matrix-axon"
   license "Apache-2.0"
-  version "0.0.14"
+  version "0.0.16"
 
   # Checksums are of the GitHub Release zips from cross-build.yml, not a
   # source build. Asset names are part of that workflow's contract.
   on_macos do
     on_arm do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.0.14/axon-server-macos-silicon.zip"
-      sha256 "b153bee4603a45f7ce978434952de0b8221ec075572f7a9461b7983b12d194f0"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.0.16/axon-server-macos-silicon.zip"
+      sha256 "ef0bf55a97ef37f920a7e982703b6f4196d576659b6fbd09ed7d9a711520ae2b"
     end
     on_intel do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.0.14/axon-server-macos-intel.zip"
-      sha256 "0bba5df7287ae96fcf15ce27f74854aa9bf4065f191ea8dadda0454774021a86"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.0.16/axon-server-macos-intel.zip"
+      sha256 "fdf41a055505723b7f0cd3b83435f8f46b9b8d0c5a11fa2d57e42986bc803290"
     end
   end
 
   # Linux arm64 has no release zip. Debian/RPM packages cover that hardware.
+  # The url stays unconditional on Linux: with no url at all, Homebrew stops
+  # at "requires at least a URL" before depends_on arch: can explain.
   on_linux do
     depends_on arch: :x86_64
 
-    on_intel do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.0.14/axon-server-linux.zip"
-      sha256 "eb727e0f100e5a0b76896768a73baceb603aebf60838758598d072e768d0da3e"
-    end
+    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.0.16/axon-server-linux.zip"
+    sha256 "63c0052730bcc6d12ab6ef4b3d5c07601ce0dcf83835ae4332954e0e84556b10"
   end
 
   # postgresql@16 is recommended in the caveats. It is intentionally not
@@ -36,9 +36,11 @@ class AxonServer < Formula
   # Tailscale stays in the caveats. Declaring the tailscale formula would
   # conflict with the tailscale-app cask most Macs already have.
 
+  # Tags, not releases/latest: a beta-*/alpha-* GitHub Release is not marked
+  # prerelease, so "latest" can be a beta. The regex admits vX.Y.Z only.
   livecheck do
-    url "https://github.com/matrix-axon/matrix-axon/releases/latest"
-    regex(%r{releases/tag/v?(\d+(?:\.\d+)+)"})
+    url "https://github.com/matrix-axon/matrix-axon.git"
+    regex(/^v(\d+(?:\.\d+)+)$/i)
   end
 
   def install
@@ -67,7 +69,11 @@ class AxonServer < Formula
 
   def caveats
     text = <<~EOS
-      axon-server is a user service. Start it as your user:
+      Run `axon-server init` (below) before starting the service. Until
+      init has run, the service exits on start, and keep_alive restarts it
+      in a loop that fills axon-server-error.log.
+
+      axon-server is a user service. After init, start it as your user:
         brew services start axon-server
       A sudo start reads root's home, so it misses the config init just wrote.
 
@@ -139,6 +145,8 @@ class AxonServer < Formula
   end
 
   test do
-    assert_match(/axon-server \d+\.\d+\.\d+/, shell_output("#{bin}/axon-server --version"))
+    # The tag names the formula version; Cargo.toml names the binary's.
+    # A tag cut without the version bump fails here.
+    assert_match "axon-server #{version} ", shell_output("#{bin}/axon-server --version")
   end
 end
