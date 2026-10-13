@@ -5,18 +5,18 @@ class AxonServer < Formula
   desc "Self-hosted Matrix state layer between homeservers and clients"
   homepage "https://github.com/matrix-axon/matrix-axon"
   license "Apache-2.0"
-  version "0.1.8"
+  version "0.1.9"
 
   # Checksums are of the GitHub Release zips from cross-build.yml, not a
   # source build. Asset names are part of that workflow's contract.
   on_macos do
     on_arm do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.8/axon-server-macos-silicon.zip"
-      sha256 "2a5fceb0eda29695702268c0b9c3ee557c7d4f1aac01003422675db640f352d8"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.9/axon-server-macos-silicon.zip"
+      sha256 "8511ff33395c68f0aa452fcf9f634a50d21adc24ffedffe323930aa791e6d6b7"
     end
     on_intel do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.8/axon-server-macos-intel.zip"
-      sha256 "37c0ad2b52b58ad4fae1f8af8c427a940b9d34fcaa537307a76f6b840e5611f6"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.9/axon-server-macos-intel.zip"
+      sha256 "6ccbe3d77b65aa16ea8c7844e4c5b96b1ec72df15d6ce5c2ab68d0f471b517d5"
     end
   end
 
@@ -26,8 +26,8 @@ class AxonServer < Formula
   on_linux do
     depends_on arch: :x86_64
 
-    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.8/axon-server-linux.zip"
-    sha256 "32178ba5873342fc2ed05c97f194f810a3f66029b50501047e88f6a12323c35b"
+    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.9/axon-server-linux.zip"
+    sha256 "b6c771c27a720aaea8f4afe545544184346cb868f92e6235841498d1ab6971f8"
   end
 
   # postgresql@16 is recommended in the caveats. It is intentionally not
@@ -47,6 +47,9 @@ class AxonServer < Formula
     bin.install "axon-server"
     doc.install "LICENSE.md"
     doc.install "THIRDPARTY"
+    # Reverse-proxy site files for the web client (ADR 0116). A glob, because
+    # release zips older than that change have none and must still install.
+    (doc/"examples").install Dir["axon-server.caddy", "axon-server.*.conf"]
   end
 
   # Create the service working directory only. Do not write config, generate
@@ -123,15 +126,43 @@ class AxonServer < Formula
       yourself, then:
         axon-server init --non-interactive --print-token --database-url 'postgres://USER:PASSWORD@HOST:5432/axon'
         brew services start axon-server
-
-      Remote access over your tailnet is optional. Keep axon-server on
-      127.0.0.1:8080 (the default), then:
-        tailscale serve --bg http://127.0.0.1:8080
-      Use the Tailscale menu-bar app if you already have it. On a headless
-      Mac mini, `brew install tailscale` is the formula; the cask
-      (tailscale-app) conflicts with that formula. This exposes the API,
-      not the web client.
     EOS
+    # The site files arrive with the web client (ADR 0116). A release zip from
+    # before it has neither, and must not be told about a web client it lacks.
+    if (doc/"examples").exist?
+      text += <<~EOS
+
+        The server carries the web client and serves it once it is running:
+          http://127.0.0.1:8080/
+        Only this machine can reach it. Paste the token init printed into
+        its sign-in screen. Always open it as 127.0.0.1, not localhost: a
+        browser treats those as two sites and keeps a separate sign-in for
+        each. Every other browser or device needs its own token:
+          axon-server token issue --label phone
+
+        To turn the web client off and serve the API alone, add to the
+        config file named above, then restart the service:
+          [server]
+          web_client = false
+          brew services restart axon-server
+
+        To reach it from other devices, put TLS in front, after you have
+        signed in once. Tailscale is the least work. Keep axon-server on
+        127.0.0.1:8080 (the default), then:
+          tailscale serve --bg http://127.0.0.1:8080
+        Use the Tailscale menu-bar app if you already have it. On a headless
+        Mac mini, `brew install tailscale` is the formula; the cask
+        (tailscale-app) conflicts with that formula. This exposes the API
+        and the web client on one address.
+
+        For Caddy, nginx, or Apache there is a site file for each, with the
+        commands that enable it at the top, in:
+          $(brew --prefix)/share/doc/axon-server/examples
+        Their comments give Linux package paths; under Homebrew those
+        servers keep their config in $(brew --prefix)/etc. Installing
+        axon-server does not change any of them.
+      EOS
+    end
     if OS.linux?
       text += <<~EOS
 
