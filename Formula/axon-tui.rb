@@ -5,18 +5,18 @@ class AxonTui < Formula
   desc "Terminal client for a self-hosted Axon server"
   homepage "https://github.com/matrix-axon/matrix-axon"
   license "Apache-2.0"
-  version "0.1.11"
+  version "0.1.12"
 
   # Checksums are of the GitHub Release zips from cross-build.yml, not a
   # source build. Asset names are part of that workflow's contract.
   on_macos do
     on_arm do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.11/axon-tui-macos-silicon.zip"
-      sha256 "a8dee11cd0babd22ac6dfdf0ac3027185c45ce6353fb9bf97ab9ba89ec229dca"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.12/axon-tui-macos-silicon.zip"
+      sha256 "3cb72f66fc8dda5679424f53c76dc0cbb7cfc8be2328832ade3289c219ee6f6e"
     end
     on_intel do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.11/axon-tui-macos-intel.zip"
-      sha256 "93f971f51b3d36b23cf4d1e78ba46b9d31014d24e6a6e8ae534149a92eaeba03"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.12/axon-tui-macos-intel.zip"
+      sha256 "2b491cfe76d60f68b64566417e092d35d488e15669a7be648f78681c8a19127e"
     end
   end
 
@@ -26,8 +26,8 @@ class AxonTui < Formula
   on_linux do
     depends_on arch: :x86_64
 
-    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.11/axon-tui-linux.zip"
-    sha256 "d9337a7ed7b4da766bd23b485ae409707e8385b582efcae74ef393616b330a52"
+    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.12/axon-tui-linux.zip"
+    sha256 "1957d7934d263ccf0c980d347307e9abcb60db237d348cc4605d3018ce3bfb9f"
   end
 
   # A client, not the server. Do not depend on the axon-server formula:
