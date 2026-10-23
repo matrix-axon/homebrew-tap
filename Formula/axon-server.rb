@@ -5,18 +5,18 @@ class AxonServer < Formula
   desc "Self-hosted Matrix state layer between homeservers and clients"
   homepage "https://github.com/matrix-axon/matrix-axon"
   license "Apache-2.0"
-  version "0.1.14"
+  version "0.1.15"
 
   # Checksums are of the GitHub Release zips from cross-build.yml, not a
   # source build. Asset names are part of that workflow's contract.
   on_macos do
     on_arm do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.14/axon-server-macos-silicon.zip"
-      sha256 "e27057731cafbb4cdb16d30a9a7634383e2c662e203cbc959d659ebb3ec85c95"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.15/axon-server-macos-silicon.zip"
+      sha256 "51109cc5332584ee648795e0eed9733f27a8678584455af43ecb67c9bc6c85a0"
     end
     on_intel do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.14/axon-server-macos-intel.zip"
-      sha256 "632d0b1e7726d49522e32567c66408bb7b65832210a7ebbfc98c22a39506164a"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.15/axon-server-macos-intel.zip"
+      sha256 "37b71f9576c889c594355aed01875c0cb2f590de5bd54f1c2423479e031d4475"
     end
   end
 
@@ -26,8 +26,8 @@ class AxonServer < Formula
   on_linux do
     depends_on arch: :x86_64
 
-    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.14/axon-server-linux.zip"
-    sha256 "99db0f1b3d09f8da3de56b6d02749015f78ac63b51e8f6059518ccba94455beb"
+    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.15/axon-server-linux.zip"
+    sha256 "6aa9a771a24a7f365286548b7f4c206b08b847d8135a103ea3aefd05964575c3"
   end
 
   # postgresql@16 is recommended in the caveats. It is intentionally not
@@ -111,7 +111,7 @@ class AxonServer < Formula
       END
       $$;
       SQL
-      "$PG/psql" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname = 'axon'" | grep -qx 1 || "$PG/createdb" --owner=axon axon
+      "$PG/psql" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname = 'axon'" | grep -qx 1 || "$PG/createdb" -E UTF8 -T template0 --owner=axon axon
       "$PG/psql" -d axon -v ON_ERROR_STOP=1 -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"
       axon-server init --non-interactive --print-token --database-url 'postgres://axon:axon@127.0.0.1:5432/axon'
       brew services start axon-server
