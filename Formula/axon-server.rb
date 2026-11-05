@@ -5,18 +5,18 @@ class AxonServer < Formula
   desc "Self-hosted Matrix state layer between homeservers and clients"
   homepage "https://github.com/matrix-axon/matrix-axon"
   license "Apache-2.0"
-  version "0.1.22"
+  version "0.1.23"
 
   # Checksums are of the GitHub Release zips from cross-build.yml, not a
   # source build. Asset names are part of that workflow's contract.
   on_macos do
     on_arm do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.22/axon-server-macos-silicon.zip"
-      sha256 "f23f6b9fbe97593d6761a412de9c690590c43b9ee76c15b42e8e3326c8c8cb6c"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.23/axon-server-macos-silicon.zip"
+      sha256 "488ba7bfc10b84ac7c29e5b0642f3f715e4bbee24dc5743675e483643026a1f3"
     end
     on_intel do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.22/axon-server-macos-intel.zip"
-      sha256 "979337fe52edf346f1f45f79efd23b76cf2fe68f6be0ffa87db87f8ba9b70503"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.23/axon-server-macos-intel.zip"
+      sha256 "19cc3a9228a4b6196fa998118c20161d9e5b3ef1bc4768e506451ac9c53b1ddd"
     end
   end
 
@@ -26,8 +26,8 @@ class AxonServer < Formula
   on_linux do
     depends_on arch: :x86_64
 
-    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.22/axon-server-linux.zip"
-    sha256 "9b7ff2810642e04eb6d80e1b2a6b61d32e111c9728de8da08786925525c3b886"
+    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.23/axon-server-linux.zip"
+    sha256 "8b24e85acbe5015bd853c639b47419d3d12fa87775b8b2c11afc99aae21deffb"
   end
 
   # postgresql@16 is recommended in the caveats. It is intentionally not
