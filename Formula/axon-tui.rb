@@ -5,18 +5,18 @@ class AxonTui < Formula
   desc "Terminal client for a self-hosted Axon server"
   homepage "https://github.com/matrix-axon/matrix-axon"
   license "Apache-2.0"
-  version "0.1.28"
+  version "0.1.29"
 
   # Checksums are of the GitHub Release zips from cross-build.yml, not a
   # source build. Asset names are part of that workflow's contract.
   on_macos do
     on_arm do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.28/axon-tui-macos-silicon.zip"
-      sha256 "ec7756243a6bc67f49bf9e00eac818ea848732684b4fcac3744bd04a3a8e4492"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.29/axon-tui-macos-silicon.zip"
+      sha256 "f35307cff28e780c6eb026f70cc61e28fd9ab090f1b3aa4dd23deb989bd2fbf0"
     end
     on_intel do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.28/axon-tui-macos-intel.zip"
-      sha256 "e6d347674863b54d8205146aad757c10c9ed4d7dff368f51d80851bb04086717"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.29/axon-tui-macos-intel.zip"
+      sha256 "5ed23eb2542666595a408983bafe1adc257b86f29520c7adb98b752dc27664bd"
     end
   end
 
@@ -26,8 +26,8 @@ class AxonTui < Formula
   on_linux do
     depends_on arch: :x86_64
 
-    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.28/axon-tui-linux.zip"
-    sha256 "9a4a16f526a40585712e940bf98e7ffb5027a08f859ed3da2899c1a9ce6fb153"
+    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.29/axon-tui-linux.zip"
+    sha256 "afc5559caf866ccf458b6b5a4a4ecad6710b2930ab6c2bc28f083c31d443bb58"
   end
 
   # A client, not the server. Do not depend on the axon-server formula:
@@ -68,8 +68,9 @@ class AxonTui < Formula
     if OS.linux?
       text += <<~EOS
 
-        This Linux binary is the GitHub Release zip built on ubuntu-latest.
-        A missing GLIBC symbol means the host is older than that zip.
+        This Linux binary is the GitHub Release zip built on ubuntu-22.04,
+        so it needs glibc 2.35 or newer. A missing GLIBC symbol means the
+        host is older than that.
       EOS
     end
     text

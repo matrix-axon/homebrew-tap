@@ -5,18 +5,18 @@ class AxonServer < Formula
   desc "Self-hosted Matrix state layer between homeservers and clients"
   homepage "https://github.com/matrix-axon/matrix-axon"
   license "Apache-2.0"
-  version "0.1.28"
+  version "0.1.29"
 
   # Checksums are of the GitHub Release zips from cross-build.yml, not a
   # source build. Asset names are part of that workflow's contract.
   on_macos do
     on_arm do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.28/axon-server-macos-silicon.zip"
-      sha256 "b40ccdec26102c313ee978dfe31c55c302a3c67f96fa46bedf4c02168e6ecbc8"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.29/axon-server-macos-silicon.zip"
+      sha256 "c5fc62d39ff7dd1fcdaede14057e1d4ae098e7f21b743353df7a0e08b3d4906f"
     end
     on_intel do
-      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.28/axon-server-macos-intel.zip"
-      sha256 "b25044053f21a693be0394899778ddafab4302d85fe51337d2c32349c07a7b4f"
+      url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.29/axon-server-macos-intel.zip"
+      sha256 "8723d38d5b82b6cee0c066408202158f3b498e5f746a60c0490b570e473014aa"
     end
   end
 
@@ -26,8 +26,8 @@ class AxonServer < Formula
   on_linux do
     depends_on arch: :x86_64
 
-    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.28/axon-server-linux.zip"
-    sha256 "34bd9e2f0559190da5693cdaa3b6fbd8584d3f4d9d51ab50810d6fa8d0aa35f4"
+    url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.1.29/axon-server-linux.zip"
+    sha256 "7c5c2226fa5966353bf67671c1c4bb9a8533ee2a3c5f8e005fb68d2fbb989901"
   end
 
   # postgresql@16 is recommended in the caveats. It is intentionally not
@@ -166,10 +166,11 @@ class AxonServer < Formula
     if OS.linux?
       text += <<~EOS
 
-        This Linux binary is the GitHub Release zip built on ubuntu-latest.
-        Its glibc is newer than the Debian and RPM packages, which are
-        built on Ubuntu 22.04. A missing GLIBC symbol means use the .deb
-        or .rpm instead.
+        This Linux binary is the GitHub Release zip built on ubuntu-22.04,
+        the same image as the Debian and RPM packages, so it needs glibc
+        2.35 or newer. A missing GLIBC symbol means this host's glibc is
+        older than that; run the Docker stack instead:
+        https://github.com/matrix-axon/matrix-axon/blob/main/deploy/README.md
       EOS
     end
     text
