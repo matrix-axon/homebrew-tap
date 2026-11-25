@@ -2,11 +2,11 @@
 # CI writes this file to matrix-axon/homebrew-tap on a version tag.
 # Edit the template in matrix-axon/matrix-axon, not the generated tap copy.
 cask "axon" do
-  version "0.2.0"
-  sha256 "64b27a07bb8b98e7b30bebbe7b57f82ef9e6d88bba88a49dc2b40d6de46a95ff"
+  version "0.2.1"
+  sha256 "42f6896de8cb4513f81eb840c53446cc788bd0cdc6e524bf19733213ddda2a3c"
 
   # The universal disk image from desktop-build.yml.
-  url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.2.0/Axon_0.2.0_universal.dmg"
+  url "https://github.com/matrix-axon/matrix-axon/releases/download/v0.2.1/Axon_0.2.1_universal.dmg"
   name "Axon"
   desc "Native desktop client for a self-hosted Axon server"
   homepage "https://github.com/matrix-axon/matrix-axon"
